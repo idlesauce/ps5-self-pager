@@ -111,7 +111,7 @@ static int init() {
     case 0x402:
     case 0x403:
     case 0x450:
-    case 0x451: // 4.51 unverified
+    case 0x451:
         pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xD20840;
         break;
 
