@@ -157,7 +157,24 @@ static int init() {
 
     case 0x1000:
     case 0x1001:
+    case 0x1020:
+    case 0x1040:
+    case 0x1060:
         pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xDE04F0;
+        break;
+
+    case 0x1100:
+    case 0x1120:
+        pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xDF1940;
+        break;
+
+    case 0x1140:
+    case 0x1160:
+        pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xDF1960;
+        break;
+
+    case 0x1200:
+        pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xDF2860;
         break;
 
     default:
@@ -190,7 +207,7 @@ void *map_self_segment(int fd, Elf64_Phdr *phdr, int segment_index) {
         // for example, for this segment:
         // Index  Type     VirtAddr     FileSize   MemSize    Align
         // 8      PT_LOAD  0xedf7e10    0xce8b98   0xce8b98   0x4000
-        // the kernel expects 0x1f4000 in the lower 32 bits, by providing 0 it tells us in the klogs: 
+        // the kernel expects 0x1f4000 in the lower 32 bits, by providing 0 it tells us in the klogs:
         // self_pager.c(122) self_pager_seg_decode_pindex: off=0, diff=0x1f4000
         uint64_t aligned_vaddr = phdr->p_vaddr & ~(phdr->p_align - 1);
         offset |= aligned_vaddr & (SUPERPAGE_SIZE - 1);
