@@ -5,10 +5,6 @@ on:
     paths-ignore:
       - "**/*.md"
       - "**/*.txt"
-  pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.txt"
   workflow_dispatch:
 
 concurrency:
@@ -19,28 +15,55 @@ jobs:
   payload-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout SDK
         uses: actions/checkout@v4
+        with:
+          repository: ps5-payload-dev/sdk
+          path: sdk
 
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install build-essential clang-18 lld-18 xxd yasm nasm
 
-      - name: Install toolchain
+      - name: Install SDK
+        working-directory: sdk
         run: |
-          wget https://github.com/ps5-payload-dev/pacbrew-repo/releases/latest/download/ps5-payload-dev.tar.gz
-          sudo tar xf ps5-payload-dev.tar.gz -C /
+          make DESTDIR=/opt/ps5-payload-sdk install
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Build Payload
         run: |
           export PS5_PAYLOAD_SDK=/opt/ps5-payload-sdk
           make dist
 
+      # upload files separately, with archive: false, so that github shows the sha hashes directly
       - name: Upload Payload ELF
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ps5-self-pager
-          path: ./*.elf
+          path: ./ps5-self-pager-system-common-lib.elf
           if-no-files-found: error
+          archive: false
 
+      - name: Upload Payload ELF
+        uses: actions/upload-artifact@v7
+        with:
+          path: ./ps5-self-pager-full-system.elf
+          if-no-files-found: error
+          archive: false
+
+      - name: Upload Payload ELF
+        uses: actions/upload-artifact@v7
+        with:
+          path: ./ps5-self-pager-shellcore.elf
+          if-no-files-found: error
+          archive: false
+
+      - name: Upload Payload ELF
+        uses: actions/upload-artifact@v7
+        with:
+          path: ./ps5-self-pager-game.elf
+          if-no-files-found: error
+          archive: false
