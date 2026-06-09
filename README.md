@@ -2,7 +2,7 @@
 
 It works by swapping `pagertab[OBJT_VNODE]` to point to `selfpagerops` instead of the `vnodepagerops` it normally is for the duration of the `mmap` call, this will cause the kernel to give us a self pager when mmapping a file, essentially replicating the removed `MAP_SELF` `mmap` flag, while bypassing its checks.
 
-Supports PS5 firmware `1.00`-`10.01`
+Supports PS5 firmware `1.00`-`13.40`
 
 ## Usage
 There are a couple different builds in the releases to dump specific folders:
