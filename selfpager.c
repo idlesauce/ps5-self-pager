@@ -188,6 +188,8 @@ static int init() {
         break;
 
     case 0x1340:
+    case 0x1342:
+    case 0x1360:
         pagertab_addr = KERNEL_ADDRESS_DATA_BASE + 0xE03910;
         break;
 
